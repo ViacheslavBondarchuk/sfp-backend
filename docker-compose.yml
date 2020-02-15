@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db-postgres:
+    image: postgres:10.4
+    restart: always
+    container_name: postgres
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/pgdata
+    expose:
+      - 5432
+    ports:
+      - 5050:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: sfp
+      PGDATA: /var/lib/postgresql/data/pgdata
+  db-mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: sfp
+    expose:
+      - 27017
+    ports:
+      - 2727:27017
+  sfp-backend:
+    container_name: sfp-backend
+    image: sfp-backend
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_PROFILES_ACTIVE: dep
+      POSTGRES_HOST: db-postgres
+      MONGO_HOST: db-mongo
+    entrypoint: ["java","-jar","sfp-backend.jar"]
+    restart: always
+    links:
+      - db-mongodb
+      - db-postgres

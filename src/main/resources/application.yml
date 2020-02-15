@@ -1,0 +1,28 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sfp
+    platform: postgres
+    username: postgres
+    password: postgres
+
+  data:
+    mongodb:
+      port: 27017
+      database: sfp
+      host: localhost
+      uri: mongodb://localhost:27017/sfp
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      file-size-threshold: 20MB
