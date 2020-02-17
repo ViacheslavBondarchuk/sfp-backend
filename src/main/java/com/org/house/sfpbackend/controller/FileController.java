@@ -2,6 +2,7 @@ package com.org.house.sfpbackend.controller;
 
 import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.org.house.sfpbackend.service.impl.FileService;
+import javassist.NotFoundException;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +34,12 @@ public class FileController {
     }
 
     @GetMapping("/{filename}")
-    public void download(@PathVariable String filename, HttpServletResponse httpServletResponse) throws IOException {
+    public GridFSFindIterable getFileByLike(@PathVariable String filename) {
+        return fileService.getFileByLike(filename);
+    }
+
+    @GetMapping("/download/{filename}")
+    public void download(@PathVariable String filename, HttpServletResponse httpServletResponse) throws IOException, NotFoundException {
         httpServletResponse.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format("filename=%s", filename));
         IOUtils.copy(fileService.download(filename), httpServletResponse.getOutputStream());
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

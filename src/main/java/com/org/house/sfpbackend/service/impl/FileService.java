@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.org.house.sfpbackend.service.AbstractFileService;
 import com.org.house.sfpbackend.utils.AuthUtils;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,13 @@ public class FileService extends AbstractFileService {
         }});
     }
 
-    public InputStream download(String filename) throws IOException {
+    public InputStream download(String filename) throws IOException, NotFoundException {
         return super.download(filename);
+    }
+
+    @Override
+    public GridFSFindIterable getFileByLike(String filename) {
+        return super.getFileByLike(filename);
     }
 
     public GridFSFindIterable getAllFile() {
