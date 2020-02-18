@@ -1,6 +1,7 @@
 package com.org.house.sfpbackend.service;
 
 import com.mongodb.DBObject;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import com.org.house.sfpbackend.utils.AuthUtils;
@@ -11,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -33,12 +36,20 @@ public abstract class AbstractFileService {
         return gridFsOperations.getResource(gridFSFile).getInputStream();
     }
 
-    public GridFSFindIterable getFileByLike(final String filename) {
-        return gridFsOperations.find(query(where("filename").regex(String.format(".*%s.*", filename))));
+    public Set<String> getFileByLike(final String filename) {
+        Set<String> filenames = new HashSet<>();
+        GridFSFindIterable gridFSFindIterable = gridFsOperations.find(query(where("filename")
+                .regex(String.format(".*%s.*", filename)).and("metadata.user_id").is(AuthUtils.getUserId())));
+        MongoCursor<GridFSFile> iterator = gridFSFindIterable.iterator();
+        while (iterator.hasNext()) filenames.add(iterator.next().getFilename());
+        return filenames;
     }
 
-    public GridFSFindIterable getAllFile() {
-        return gridFsOperations.find(query(where("metadata.user_id").is(AuthUtils.getUserId())));
+    public Set<String> getAllFile() {
+        HashSet<String> filenames = new HashSet<>();
+        MongoCursor<GridFSFile> iterator = gridFsOperations.find(query(where("metadata.user_id").is(AuthUtils.getUserId()))).iterator();
+        while (iterator.hasNext()) filenames.add(iterator.next().getFilename());
+        return filenames;
     }
 
     public void delete(final String filename) {

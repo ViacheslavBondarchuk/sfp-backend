@@ -1,6 +1,5 @@
 package com.org.house.sfpbackend.controller;
 
-import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.org.house.sfpbackend.service.impl.FileService;
 import javassist.NotFoundException;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/sfp/api/files")
@@ -29,12 +29,12 @@ public class FileController {
     }
 
     @GetMapping
-    public GridFSFindIterable getAll() {
+    public Set<String> getAll() {
         return fileService.getAllFile();
     }
 
     @GetMapping("/{filename}")
-    public GridFSFindIterable getFileByLike(@PathVariable String filename) {
+    public Set<String> getFileByLike(@PathVariable String filename) {
         return fileService.getFileByLike(filename);
     }
 

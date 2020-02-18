@@ -1,7 +1,6 @@
 package com.org.house.sfpbackend.service.impl;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.org.house.sfpbackend.service.AbstractFileService;
 import com.org.house.sfpbackend.utils.AuthUtils;
 import javassist.NotFoundException;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 @Service
 public class FileService extends AbstractFileService {
@@ -31,11 +31,11 @@ public class FileService extends AbstractFileService {
     }
 
     @Override
-    public GridFSFindIterable getFileByLike(String filename) {
+    public Set<String> getFileByLike(String filename) {
         return super.getFileByLike(filename);
     }
 
-    public GridFSFindIterable getAllFile() {
+    public Set<String> getAllFile() {
         return super.getAllFile();
     }
 
