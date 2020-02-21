@@ -26,6 +26,14 @@ services:
       - 27017
     ports:
       - 27027:27017
+  db-redis:
+    image: redis
+    container_name: redisdb
+    restart: always
+    expose:
+      - 6379
+    ports:
+      - 6370:6379
   sfp-backend:
     container_name: sfp-backend
     image: sfp-backend
@@ -37,16 +45,17 @@ services:
       SPRING_PROFILES_ACTIVE: dep
       POSTGRES_HOST: db-postgres
       MONGO_HOST: db-mongo
+      REDIS_HOST: db-redis
     entrypoint: ["java","-jar","sfp-backend.jar"]
     restart: always
     links:
       - db-mongodb
       - db-postgres
+      - db-redis
   nginx:
     image: nginx
     container_name: nginx
     volumes:
-      - ../html:/usr/share/nginx/html
       - ./default.conf:/etc/nginx/conf.d/default.conf
     expose:
       - 8085
