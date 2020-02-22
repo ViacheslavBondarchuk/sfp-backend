@@ -2,7 +2,6 @@ package com.org.house.sfpbackend.controller;
 
 import com.org.house.sfpbackend.service.impl.FileService;
 import javassist.NotFoundException;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -41,8 +40,8 @@ public class FileController {
     @GetMapping("/download/{filename}")
     public void download(@PathVariable String filename, HttpServletResponse httpServletResponse) throws IOException, NotFoundException {
         httpServletResponse.setHeader(HttpHeaders.CONTENT_DISPOSITION, String.format("filename=%s", filename));
-        IOUtils.copy(fileService.download(filename), httpServletResponse.getOutputStream());
         httpServletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpServletResponse.getOutputStream().write(fileService.download(filename).readAllBytes());
         httpServletResponse.flushBuffer();
     }
 
