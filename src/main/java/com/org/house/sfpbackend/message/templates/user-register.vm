@@ -1,0 +1,7 @@
+<html>
+<div>
+    <b>Шановний</b>: ${fullname}</b><br/><br/>
+    <span><b>Перейдіть по посиланні нижче, щоб активувати аккаунт</b></span>
+    <span><b>link:</b> ${link}</span>
+</div>
+</html>
