@@ -4,6 +4,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import javax.mail.MessagingException;
+
 public abstract class AbstractService<T, R extends JpaRepository<T, Long>> {
     protected R repository;
 
@@ -11,8 +13,8 @@ public abstract class AbstractService<T, R extends JpaRepository<T, Long>> {
         this.repository = repository;
     }
 
-    public void create(final T t) {
-        repository.save(t);
+    public T create(final T t) throws MessagingException {
+        return repository.save(t);
     }
 
     public void update(final T t, final long id) throws NotFoundException {

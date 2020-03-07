@@ -6,6 +6,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping("/sfp/api/users")
 public class UserController {
@@ -17,7 +19,7 @@ public class UserController {
     }
 
     @PostMapping
-    public void create(@RequestBody User user) {
+    public void create(@RequestBody User user) throws MessagingException {
         userService.create(user);
     }
 
@@ -29,6 +31,11 @@ public class UserController {
     @GetMapping
     public Iterable<User> readAll() {
         return userService.readAll();
+    }
+
+    @GetMapping("/activate/{uuid}/{id}")
+    public void activation(@PathVariable long id) throws NotFoundException {
+        userService.activate(id);
     }
 
     @GetMapping("/{id}")

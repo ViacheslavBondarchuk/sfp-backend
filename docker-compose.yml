@@ -52,6 +52,14 @@ services:
       - db-mongodb
       - db-postgres
       - db-redis
+  postfix:
+    container_name: postfix
+    image: mailu/postfix
+
+    expose:
+      - 8025
+    ports:
+      - 8025:8025
   nginx:
     image: nginx
     container_name: nginx
@@ -60,6 +68,6 @@ services:
     expose:
       - 8085
     ports:
-    - 8085:8085
+      - 8085:8085
     links:
       - sfp-backend
